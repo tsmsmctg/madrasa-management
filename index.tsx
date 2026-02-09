@@ -2,17 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 
-console.log("Madrasa App Initializing...");
+console.log("Madrasa App: Initializing on mount point...");
 
-const rootElement = document.getElementById('root');
-if (!rootElement) {
-  console.error("Root element not found!");
-  throw new Error("Could not find root element to mount to");
+const container = document.getElementById('root');
+if (container) {
+  const root = ReactDOM.createRoot(container);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+} else {
+  console.error("CRITICAL ERROR: Root element '#root' not found in index.html!");
 }
-
-const root = ReactDOM.createRoot(rootElement);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
