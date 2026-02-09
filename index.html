@@ -16,34 +16,27 @@
             background-color: #f9fafb;
             color: #111827;
         }
-        /* ইনপুট ফিল্ডের ডার্ক মোড এবং অটোফিল ফিক্স */
+        /* ইনপুট ফিল্ড সবসময় সাদা এবং লেখা কালো থাকবে */
         input, select, textarea {
             background-color: #ffffff !important;
             color: #111827 !important;
-            border-color: #d1d5db !important;
+            border: 1px solid #d1d5db !important;
         }
         input:focus, select:focus, textarea:focus {
+            outline: 2px solid #059669 !important;
             background-color: #ffffff !important;
-            color: #111827 !important;
         }
+        /* অটোফিল ডার্কনেস রিমুভ */
         input:-webkit-autofill,
         input:-webkit-autofill:hover, 
         input:-webkit-autofill:focus {
             -webkit-text-fill-color: #111827 !important;
             -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
-            transition: background-color 5000s ease-in-out 0s;
         }
         @media print {
-            .no-print {
-                display: none !important;
-            }
-            body {
-                background: white;
-            }
-            @page {
-                size: A4;
-                margin: 1cm;
-            }
+            .no-print { display: none !important; }
+            body { background: white; }
+            @page { size: A4; margin: 1cm; }
         }
     </style>
 
@@ -63,10 +56,10 @@
   }
 }
 </script>
-  <script type="module" crossorigin src="/madrasa-management/assets/index-DUvvsSEm.js"></script>
+  <script type="module" crossorigin src="/madrasa-management/assets/index-Cv2RzN43.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-900">
     <div id="root"></div>
-    <!-- Vite Entry Point: Leading slash is important for Vite -->
+    <!-- পাথ হিসেবে './index.tsx' ব্যবহার করা হয়েছে যাতে সাব-ডিরেক্টরিতে কাজ করে -->
 </body>
 </html>
