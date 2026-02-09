@@ -1,0 +1,123 @@
+
+import React, { useState } from 'react';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../lib/firebase';
+import { useNavigate } from 'react-router-dom';
+import { Lock, Mail, AlertCircle, Info } from 'lucide-react';
+
+const Login: React.FC = () => {
+  const [email, setEmail] = useState('tsmsmctg@gmail.com');
+  const [password, setPassword] = useState('912550');
+  const [error, setError] = useState('');
+  const [info, setInfo] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setInfo('');
+
+    try {
+      // প্রথমে লগইন করার চেষ্টা
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate('/');
+    } catch (err: any) {
+      console.error("Login Error Code:", err.code);
+      
+      // যদি ইউজার খুঁজে না পাওয়া যায় (Firebase error codes vary)
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+        // যদি এটি আমাদের নির্ধারিত অ্যাডমিন ইমেইল হয়, তবে এটি তৈরি করার চেষ্টা করি
+        if (email === 'tsmsmctg@gmail.com' && password === '912550') {
+          try {
+            setInfo('প্রথমবার ব্যবহারের জন্য অ্যাডমিন অ্যাকাউন্ট তৈরি করা হচ্ছে...');
+            await createUserWithEmailAndPassword(auth, email, password);
+            navigate('/');
+            return;
+          } catch (createErr: any) {
+            setError('অ্যাকাউন্ট তৈরি করা যাচ্ছে না। ফায়ারবেস কনসোলে Email/Password মেথড এনাবল আছে কিনা চেক করুন।');
+          }
+        } else {
+          setError('ভুল ইমেইল বা পাসওয়ার্ড প্রদান করা হয়েছে।');
+        }
+      } else if (err.code === 'auth/operation-not-allowed') {
+        setError('ফায়ারবেস কনসোলে Email/Password লগইন মেথডটি Enable করা নেই।');
+      } else {
+        setError('লগইন করতে সমস্যা হচ্ছে। ইন্টারনেট সংযোগ চেক করুন।');
+      }
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-emerald-900 px-4">
+      <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div className="p-8 bg-emerald-700 text-white text-center">
+          <h1 className="text-2xl font-bold mb-2">তাহেরিয়া সাবেরিয়া মাদ্রাসা</h1>
+          <p className="text-emerald-100 opacity-90">অ্যাডমিন প্যানেলে লগইন করুন</p>
+        </div>
+        
+        <form onSubmit={handleLogin} className="p-8 space-y-6">
+          {error && (
+            <div className="bg-red-50 border-l-4 border-red-500 p-4 flex items-start">
+              <AlertCircle className="w-5 h-5 text-red-500 mr-2 shrink-0" />
+              <p className="text-sm text-red-700 font-medium">{error}</p>
+            </div>
+          )}
+
+          {info && (
+            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 flex items-start">
+              <Info className="w-5 h-5 text-blue-500 mr-2 shrink-0" />
+              <p className="text-sm text-blue-700 font-medium">{info}</p>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-gray-700 block">ইমেইল</label>
+            <div className="relative">
+              <Mail className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="email"
+                required
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-gray-700 block">পাসওয়ার্ড</label>
+            <div className="relative">
+              <Lock className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="password"
+                required
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all outline-none"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transform active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'প্রসেস হচ্ছে...' : 'লগইন করুন'}
+            </button>
+          </div>
+          
+          <div className="text-center text-xs text-gray-400">
+            নির্দেশনা: প্রথমবার লগইনের ক্ষেত্রে এই আইডি-পাসওয়ার্ড দিয়েই অ্যাকাউন্ট তৈরি হয়ে যাবে।
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
