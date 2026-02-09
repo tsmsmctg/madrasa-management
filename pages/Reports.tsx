@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { Transaction } from '../types';
-import { Printer, Calendar, FileDown } from 'lucide-react';
+import { Printer, Calendar } from 'lucide-react';
 import PrintReport from '../components/PrintReport';
 
 const Reports: React.FC = () => {
@@ -14,7 +13,6 @@ const Reports: React.FC = () => {
   });
   const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
   const [loading, setLoading] = useState(false);
-  const [showPrintView, setShowPrintView] = useState(false);
 
   const fetchReports = async () => {
     setLoading(true);
@@ -42,6 +40,8 @@ const Reports: React.FC = () => {
     window.print();
   };
 
+  const inputClass = "w-full border border-gray-300 rounded-lg px-4 py-2 bg-white text-gray-900 focus:ring-2 focus:ring-emerald-500 outline-none shadow-sm";
+
   return (
     <div className="space-y-6">
       <div className="no-print space-y-6">
@@ -50,13 +50,14 @@ const Reports: React.FC = () => {
           <div className="flex gap-2">
             <button 
               onClick={fetchReports}
-              className="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center shadow-lg"
+              disabled={loading}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center shadow-lg transition-all disabled:opacity-50"
             >
-              <Calendar className="w-4 h-4 mr-2" /> লোড করুন
+              <Calendar className="w-4 h-4 mr-2" /> {loading ? 'লোড হচ্ছে...' : 'লোড করুন'}
             </button>
             <button 
               onClick={handlePrint}
-              className="bg-gray-800 text-white px-4 py-2 rounded-lg flex items-center shadow-lg"
+              className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg flex items-center shadow-lg transition-all"
             >
               <Printer className="w-4 h-4 mr-2" /> প্রিন্ট করুন
             </button>
@@ -68,7 +69,7 @@ const Reports: React.FC = () => {
             <label className="text-sm font-bold text-gray-600">শুরুর তারিখ</label>
             <input 
               type="date" 
-              className="w-full border rounded-lg px-4 py-2" 
+              className={inputClass}
               value={startDate}
               onChange={e => setStartDate(e.target.value)}
             />
@@ -77,7 +78,7 @@ const Reports: React.FC = () => {
             <label className="text-sm font-bold text-gray-600">শেষের তারিখ</label>
             <input 
               type="date" 
-              className="w-full border rounded-lg px-4 py-2" 
+              className={inputClass}
               value={endDate}
               onChange={e => setEndDate(e.target.value)}
             />

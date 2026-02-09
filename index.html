@@ -9,30 +9,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            color-scheme: light;
+            color-scheme: light !important;
         }
         body {
             font-family: 'Hind Siliguri', sans-serif;
             background-color: #f9fafb;
+            color: #111827;
         }
+        /* ইনপুট ফিল্ড সবসময় সাদা এবং লেখা কালো থাকবে */
         input, select, textarea {
             background-color: #ffffff !important;
             color: #111827 !important;
+            border: 1px solid #d1d5db !important;
         }
-        input::placeholder {
-            color: #9ca3af !important;
+        input:focus, select:focus, textarea:focus {
+            outline: 2px solid #059669 !important;
+            background-color: #ffffff !important;
+        }
+        /* অটোফিল ডার্কনেস রিমুভ */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus {
+            -webkit-text-fill-color: #111827 !important;
+            -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
         }
         @media print {
-            .no-print {
-                display: none !important;
-            }
-            body {
-                background: white;
-            }
-            @page {
-                size: A4;
-                margin: 1cm;
-            }
+            .no-print { display: none !important; }
+            body { background: white; }
+            @page { size: A4; margin: 1cm; }
         }
     </style>
 <script type="importmap">
@@ -54,6 +58,8 @@
 </head>
 <body class="bg-gray-50 text-gray-900">
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
+    <!-- পাথ হিসেবে './index.tsx' ব্যবহার করা হয়েছে যাতে সাব-ডিরেক্টরিতে কাজ করে -->
+    <script type="module" src="./index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
 </body>
 </html>
